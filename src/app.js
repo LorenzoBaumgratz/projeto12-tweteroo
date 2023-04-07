@@ -24,7 +24,7 @@ app.post("/sign-up", (req, res) => {
 app.post("/tweets", (req, res) => {
     const { username, tweet } = req.body;
 
-    if (!username)
+    if (!username || !userArr.find(t => t.username === username))
         return res.send("UNAUTHORIZED");
 
     const savedTweet =
