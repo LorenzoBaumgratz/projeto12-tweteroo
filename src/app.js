@@ -61,6 +61,9 @@ app.get("/tweets", (req, res) => {
     if (page && page >= 1) {
         lim = page * 10;
         start = lim - 10;
+        if (tweetArr.length < lim) {
+            lim = tweetArr.length;
+        }
     } else if (tweetArr.length >= 10) {
         lim = 10;
     } else {
