@@ -18,12 +18,12 @@ app.post("/sign-up", (req, res) => {
     }
 
     if (typeof (username) != "string" || typeof (avatar) != "string" || !username || !avatar) {
-        return res.send("Todos os campos são obrigatórios!").status(400);
+        return res.status(400).send("Todos os campos são obrigatórios!");
     }
 
 
     userArr.push(user);
-    res.send("Ok").status(201);
+    res.status(201).send("Ok");
 })
 
 app.post("/tweets", (req, res) => {
@@ -32,7 +32,7 @@ app.post("/tweets", (req, res) => {
 
 
     if (typeof (user) != "string" || typeof (tweet) != "string" || !user || !tweet) {
-        return res.send("Todos os campos são obrigatórios!").status(400);
+        return res.status(400).send("Todos os campos são obrigatórios!");
     }
 
     if (!userArr.find(t => t.username === user)) {
@@ -46,7 +46,7 @@ app.post("/tweets", (req, res) => {
     }
 
     tweetArr.push(savedTweet);
-    res.send("Ok").status(201);
+    res.status(201).send("Ok");
 })
 
 app.get("/tweets", (req, res) => {
@@ -56,7 +56,7 @@ app.get("/tweets", (req, res) => {
     let lim;
     let start = 0;
 
-    if (page < 1) return res.send("Informe uma página válida!").status(400);
+    if (page < 1) return res.status(400).send("Informe uma página válida!");
 
     if (page && page >= 1) {
         lim = page * 10;
@@ -76,7 +76,7 @@ app.get("/tweets", (req, res) => {
         recentTweetsArr.push(recentTweet);
     }
 
-    res.send(recentTweetsArr).status(200);
+    res.status(200).send(recentTweetsArr);
 
 })
 
