@@ -16,9 +16,8 @@ app.post("/sign-up", (req, res) => {
         username: username,
         avatar: avatar
     }
-    if (!username) return res.sendStatus(400);
 
-    if (typeof (username) != "string" || typeof (avatar) != "string") {
+    if (typeof (username) != "string" || typeof (avatar) != "string" || !username || !avatar) {
         return res.send("Todos os campos são obrigatórios!").status(400);
     }
 
@@ -32,13 +31,13 @@ app.post("/tweets", (req, res) => {
     const { user } = req.headers;
 
 
-    if (typeof (user) != "string" || typeof (tweet) != "string") {
+    if (typeof (user) != "string" || typeof (tweet) != "string" || !user || !tweet) {
         return res.send("Todos os campos são obrigatórios!").status(400);
     }
 
-    if (!user || !userArr.find(t => t.username === user))
-        return res.sendStatus(400);
-
+    if (!userArr.find(t => t.username === user)) {
+        return res.sendStatus(401);
+    }
 
     const savedTweet =
     {
