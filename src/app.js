@@ -16,36 +16,58 @@ app.post("/sign-up", (req, res) => {
         username: username,
         avatar: avatar
     }
+    if (!username) return res.sendStatus(400);
+
+    if (typeof (username) != "string" || typeof (avatar) != "string") {
+        return res.send("Todos os campos são obrigatórios!").status(400);
+    }
+
 
     userArr.push(user);
-    res.send("Ok");
+    res.send("Ok").status(201);
 })
 
 app.post("/tweets", (req, res) => {
-    const { username, tweet } = req.body;
+    const { tweet } = req.body;
+    const { user } = req.headers;
 
-    if (!username || !userArr.find(t => t.username === username))
-        return res.send("UNAUTHORIZED");
+
+    if (typeof (user) != "string" || typeof (tweet) != "string") {
+        return res.send("Todos os campos são obrigatórios!").status(400);
+    }
+
+    if (!user || !userArr.find(t => t.username === user))
+        return res.sendStatus(400);
+
 
     const savedTweet =
     {
-        username: username,
+        username: user,
         tweet: tweet
     }
 
     tweetArr.push(savedTweet);
-    res.send("Ok");
+    res.send("Ok").status(201);
 })
 
 app.get("/tweets", (req, res) => {
+    const { page } = req.query;
+
     let recentTweetsArr = [];
     let lim;
-    if (tweetArr.length >= 10) {
-        lim=10;
-    }else{
-        lim=tweetArr.length;
+    let start = 0;
+
+    if (page < 1) return res.send("Informe uma página válida!").status(400);
+
+    if (page && page >= 1) {
+        lim = page * 10;
+        start = lim - 10;
+    } else if (tweetArr.length >= 10) {
+        lim = 10;
+    } else {
+        lim = tweetArr.length;
     }
-    for (let i = 0; i < lim; i++) {
+    for (let i = start; i < lim; i++) {
         let recentTweet =
         {
             username: tweetArr[i].username,
@@ -55,7 +77,14 @@ app.get("/tweets", (req, res) => {
         recentTweetsArr.push(recentTweet);
     }
 
-    res.send(recentTweetsArr)
+    res.send(recentTweetsArr).status(200);
+
+})
+
+app.get("/tweets/:username", (req, res) => {
+    const { username } = req.params;
+    const AuxArr = tweetArr.filter((i) => i.username === username);
+    res.send(AuxArr);
 
 })
 
